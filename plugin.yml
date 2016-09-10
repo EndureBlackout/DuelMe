@@ -1,0 +1,11 @@
+name: DuelMe
+main: me.endureblackout.duelme.DuelMeMain
+version: 1.0
+description: Duel plugin for minecraft
+author: [EndureBlackout]
+commands:
+  duel:
+    description: duel somone
+    usage: "/duel <player>"
+  arena:
+    description: admin command
