@@ -92,6 +92,7 @@ public class ArenaChecks implements Listener {
 					Player p = (Player) e.getEntity();
 		
 					for(Entry<UUID, UUID> k : CommandListener.inProg.entrySet()) {
+						System.out.println(k);
 						Player winner = e.getEntity().getKiller();
 
 						if(k.getKey().equals(p.getUniqueId()) && k.getValue().equals(winner.getUniqueId()) || k.getKey().equals(winner.getUniqueId()) && k.getValue().equals(p.getUniqueId())) {

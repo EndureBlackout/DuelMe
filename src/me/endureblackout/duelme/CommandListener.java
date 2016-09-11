@@ -69,7 +69,7 @@ public class CommandListener implements CommandExecutor {
 									int p1z = plugin.y.getInt("arenas." + choosenArena + ".spawn2.z");
 									Location p1Loc = new Location(world, p1x, p1y, p1z);
 									
-									inProg.put(duelWait.get(k.getKey()), p.getUniqueId());
+									inProg.put(p1, p.getUniqueId());
 									duelWait.remove(k.getKey());
 									
 									for(Player pIDP : Bukkit.getServer().getOnlinePlayers()) {
