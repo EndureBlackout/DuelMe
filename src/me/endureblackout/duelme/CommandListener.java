@@ -123,7 +123,7 @@ public class CommandListener implements CommandExecutor {
 					}
 				}
 				
-				if(args.length == 2) {
+				if(args.length == 2 && p.hasPermission("duelme.admin")) {
 					if(args[0].equalsIgnoreCase("set") && args[1].equalsIgnoreCase("lobby")) {
 						if(p.hasPermission("duelme.lobby")){
 							plugin.y.set("lobby.world", p.getLocation().getWorld().getName());
@@ -139,7 +139,7 @@ public class CommandListener implements CommandExecutor {
 				}
 			}
 			
-			if(cmd.getName().equalsIgnoreCase("arena")) {
+			if(cmd.getName().equalsIgnoreCase("arena") && p.hasPermission("duelme.admin")) {
 				if(args.length == 2) {
 					String arenaD = args[1].toLowerCase();
 					

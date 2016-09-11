@@ -10,7 +10,11 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class ArenaChecks implements Listener {
 	
@@ -61,6 +65,49 @@ public class ArenaChecks implements Listener {
 				}
 			}, 900 * 20);
 				
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerDeath(EntityDeathEvent e) {
+		if(e.getEntity() instanceof Player) {
+			EntityDamageEvent cause = e.getEntity().getLastDamageCause();
+			DamageCause dCause = cause.getCause();
+			
+			System.out.println(dCause.toString());
+			if(!(dCause == DamageCause.ENTITY_ATTACK)) {
+				Player p = (Player) e.getEntity();
+				
+				for(Player winner : Bukkit.getOnlinePlayers()) {
+					for(Entry<UUID, UUID> k : CommandListener.inProg.entrySet()) {
+						if(k.getKey().equals(p.getUniqueId()) && k.getValue().equals(winner.getUniqueId()) || k.getKey().equals(winner.getUniqueId()) && k.getValue().equals(p.getUniqueId())) {
+							
+						}
+					}
+				}
+			}
+			
+			if(dCause == DamageCause.ENTITY_ATTACK) {
+				if(e.getEntity().getKiller() instanceof Player) {
+					Player p = (Player) e.getEntity();
+		
+					for(Entry<UUID, UUID> k : CommandListener.inProg.entrySet()) {
+						Player winner = e.getEntity().getKiller();
+
+						if(k.getKey().equals(p.getUniqueId()) && k.getValue().equals(winner.getUniqueId()) || k.getKey().equals(winner.getUniqueId()) && k.getValue().equals(p.getUniqueId())) {
+							System.out.println("Working here");
+							
+							p.sendMessage(ChatColor.GREEN + "You lost the duel and " + ChatColor.BLUE + winner.getName() + ChatColor.GREEN + " received all your drops!");
+							
+							for(ItemStack drops : e.getDrops()) {
+								winner.getInventory().addItem(drops);
+								winner.sendMessage(ChatColor.GREEN + "You won and received " + ChatColor.BLUE + p.getName() + "'s " + ChatColor.GREEN + "drops!");
+							}
+							Bukkit.getServer().broadcastMessage(ChatColor.BLUE + winner.getName() + ChatColor.GREEN + " has won in a duel against " + ChatColor.BLUE + p.getName());
+						}
+					}
+				}
+			}
 		}
 	}
 }
