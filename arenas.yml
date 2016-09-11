@@ -1,1 +1,10 @@
+blocked cmds:
+   - teleport
+   - spawn
+   - tp
+   - tpa
+   - tpyes
+   - tpaccept
+   - home
+   - tpahere
 arenas:

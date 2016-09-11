@@ -122,6 +122,21 @@ public class CommandListener implements CommandExecutor {
 						}
 					}
 				}
+				
+				if(args.length == 2) {
+					if(args[0].equalsIgnoreCase("set") && args[1].equalsIgnoreCase("lobby")) {
+						if(p.hasPermission("duelme.lobby")){
+							plugin.y.set("lobby.world", p.getLocation().getWorld().getName());
+							plugin.y.set("lobby.x", p.getLocation().getBlock().getX());
+							plugin.y.set("lobby.y", p.getLocation().getBlock().getY());
+							plugin.y.set("lobby.z", p.getLocation().getBlock().getZ());
+								
+							plugin.saveArenas();
+								
+							p.sendMessage(ChatColor.GREEN + "Duels lobby has been set!");
+						}
+					}
+				}
 			}
 			
 			if(cmd.getName().equalsIgnoreCase("arena")) {
@@ -151,7 +166,7 @@ public class CommandListener implements CommandExecutor {
 							
 							plugin.saveArenas();
 							
-							p.sendMessage(ChatColor.GREEN + "Spawn 1 set for arena " + arenaC);
+							p.sendMessage(ChatColor.GREEN + "Spawn 1 set for arena " + ChatColor.RED + arenaC);
 						}
 						
 						if(args[2].equalsIgnoreCase("spawn2")) {
@@ -161,7 +176,7 @@ public class CommandListener implements CommandExecutor {
 							
 							plugin.saveArenas();
 							
-							p.sendMessage(ChatColor.GREEN + "Spawn 2 set for arena " + arenaC);
+							p.sendMessage(ChatColor.GREEN + "Spawn 2 set for arena " + ChatColor.RED + arenaC);
 						}
 					}
 					
@@ -174,7 +189,7 @@ public class CommandListener implements CommandExecutor {
 							plugin.y.set("arenas." + arenaC + ".pos1.z", p.getLocation().getBlockZ());
 							
 							plugin.saveArenas();
-							p.sendMessage(ChatColor.GREEN + "Arena create sucessfully with name " + args[1]);
+							p.sendMessage(ChatColor.GREEN + "Arena create sucessfully with name " + ChatColor.RED + arenaC);
 						}
 					}
 					
@@ -186,7 +201,7 @@ public class CommandListener implements CommandExecutor {
 							plugin.y.set("arenas." + arenaC + ".pos2.z", p.getLocation().getBlockZ());
 							
 							plugin.saveArenas();
-							p.sendMessage(ChatColor.GREEN + "You have sucessfully set point 2 for " + args[1]);
+							p.sendMessage(ChatColor.GREEN + "You have sucessfully set point 2 for " + ChatColor.RED + arenaC);
 						}
 					}
 				}
