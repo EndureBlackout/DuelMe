@@ -96,8 +96,8 @@ public class ArenaChecks implements Listener {
 						Player winner = e.getEntity().getKiller();
 						
 						World world = Bukkit.getServer().getWorld(plugin.y.getString("lobby.world"));
-                        Location p1Loc = new Location(world, plugin.y.getInt("lobby.x"), plugin.y.getInt("lobby.y"), plugin.y.getInt("lobby.z"));
-                        Location pLoc = new Location(world, plugin.y.getInt("lobby.x"), plugin.y.getInt("lobby.y"), plugin.y.getInt("lobby.z"));
+                				Location p1Loc = new Location(world, plugin.y.getInt("lobby.x"), plugin.y.getInt("lobby.y"), plugin.y.getInt("lobby.z"));
+                        			Location pLoc = new Location(world, plugin.y.getInt("lobby.x"), plugin.y.getInt("lobby.y"), plugin.y.getInt("lobby.z"));
 
 						if(k.getKey().equals(p.getUniqueId()) && k.getValue().equals(winner.getUniqueId()) || k.getKey().equals(winner.getUniqueId()) && k.getValue().equals(p.getUniqueId())) {
 							System.out.println("Working here");
