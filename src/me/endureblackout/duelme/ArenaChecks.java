@@ -12,7 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -59,6 +59,12 @@ public class ArenaChecks implements Listener {
 								p.setHealth(p.getMaxHealth());
 								p1.teleport(p1Loc);
 								p.teleport(pLoc);
+								
+								for(Entry<String, UUID> use : CommandListener.inUse.entrySet()) {
+									if(use.getValue().equals(p.getUniqueId()) || use.getValue().equals(p1.getUniqueId())) {
+										CommandListener.inUse.remove(use.getKey());
+									}
+								}
 							}
 						}
 					}
@@ -69,7 +75,7 @@ public class ArenaChecks implements Listener {
 	}
 	
 	@EventHandler
-	public void onPlayerDeath(EntityDeathEvent e) {
+	public void onPlayerDeath(PlayerDeathEvent e) {
 		if(e.getEntity() instanceof Player) {
 			EntityDamageEvent cause = e.getEntity().getLastDamageCause();
 			DamageCause dCause = cause.getCause();
@@ -97,7 +103,7 @@ public class ArenaChecks implements Listener {
 						
 						World world = Bukkit.getServer().getWorld(plugin.y.getString("lobby.world"));
                 				Location p1Loc = new Location(world, plugin.y.getInt("lobby.x"), plugin.y.getInt("lobby.y"), plugin.y.getInt("lobby.z"));
-                        			Location pLoc = new Location(world, plugin.y.getInt("lobby.x"), plugin.y.getInt("lobby.y"), plugin.y.getInt("lobby.z"));
+                        		Location pLoc = new Location(world, plugin.y.getInt("lobby.x"), plugin.y.getInt("lobby.y"), plugin.y.getInt("lobby.z"));
 
 						if(k.getKey().equals(p.getUniqueId()) && k.getValue().equals(winner.getUniqueId()) || k.getKey().equals(winner.getUniqueId()) && k.getValue().equals(p.getUniqueId())) {
 							System.out.println("Working here");
@@ -106,12 +112,22 @@ public class ArenaChecks implements Listener {
 							
 							p.teleport(pLoc);
 							winner.teleport(p1Loc);
+							winner.sendMessage(ChatColor.GREEN + "You won and received " + ChatColor.BLUE + p.getName() + "'s " + ChatColor.GREEN + "drops!");
 							
 							for(ItemStack drops : e.getDrops()) {
 								winner.getInventory().addItem(drops);
-								winner.sendMessage(ChatColor.GREEN + "You won and received " + ChatColor.BLUE + p.getName() + "'s " + ChatColor.GREEN + "drops!");
 							}
+							
+							for(Entry<String, UUID> use : CommandListener.inUse.entrySet()) {
+								if(use.getValue().equals(winner.getUniqueId()) || use.getValue().equals(p.getUniqueId())) {
+									CommandListener.inUse.remove(use.getKey());
+								}
+							}
+							
 							Bukkit.getServer().broadcastMessage(ChatColor.BLUE + winner.getName() + ChatColor.GREEN + " has won in a duel against " + ChatColor.BLUE + p.getName());
+							e.getDrops().clear();
+							e.setDeathMessage(null);
+							winner.setHealth(winner.getMaxHealth());
 						}
 					}
 				}

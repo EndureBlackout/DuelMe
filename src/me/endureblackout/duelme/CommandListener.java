@@ -1,8 +1,6 @@
 package me.endureblackout.duelme;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
@@ -24,10 +22,12 @@ public class CommandListener implements CommandExecutor {
 	public CommandListener(DuelMeMain instance) {
 		this.plugin = instance;
 	}
+	
+	
 
 	public static Map<UUID, UUID> duelWait = new HashMap<UUID, UUID>();
 	public static Map<UUID, UUID> inProg = new HashMap<UUID, UUID>();
-	public static List<String> inUse = new ArrayList<String>();
+	public static Map<String, UUID> inUse = new HashMap<String, UUID>();
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -53,8 +53,9 @@ public class CommandListener implements CommandExecutor {
 							int selector = random.nextInt(plugin.arenas.size());
 							String arena = plugin.arenas.get(selector);
 							
+							
 							for(Entry<UUID, UUID> k : duelWait.entrySet()) {
-								if(k.getValue().equals(p.getUniqueId())) {
+									
 									String choosenArena = arena;
 									World world = Bukkit.getServer().getWorld(plugin.y.getString("arenas." + choosenArena + ".world"));
 									UUID p1 = k.getKey();
@@ -74,9 +75,17 @@ public class CommandListener implements CommandExecutor {
 									
 									for(Player pIDP : Bukkit.getServer().getOnlinePlayers()) {
 										if(pIDP.getUniqueId().equals(p1)) {
+											
+											if(k.getValue().equals(p.getUniqueId())) {
+												
+												if(selector == 0) {
+													p.sendMessage(ChatColor.RED + "No arenas available!");
+													pIDP.sendMessage(ChatColor.RED + "No arenas available!");
+												}
+												
 											pIDP.sendMessage(ChatColor.GREEN + "Duel was accepted!");
-											if(!inUse.contains(choosenArena)) {
-												inUse.add(choosenArena);
+											if(!inUse.containsKey(choosenArena)) {
+												inUse.put(choosenArena, pIDP.getUniqueId());
 												p.sendMessage(ChatColor.GREEN + "You are being teleported to the " + choosenArena + " arena!");
 												pIDP.sendMessage(ChatColor.GREEN + "You are being teleported to the " + choosenArena + " arena!");
 												p.teleport(pLoc);
@@ -112,7 +121,7 @@ public class CommandListener implements CommandExecutor {
 					
 					if(!args[0].equalsIgnoreCase("accept") && !args[0].equalsIgnoreCase("decline")) {
 						for(Player p1 : Bukkit.getOnlinePlayers()) {
-							if(!p1.getName().equalsIgnoreCase(args[0])) {
+							if(!p1.isOnline() || !p1.getName().toLowerCase().equalsIgnoreCase(args[0].toLowerCase())) {
 								p.sendMessage(ChatColor.RED + "The player doesn't exist or isn't online!");
 							} else {
 								duelWait.put(p.getUniqueId(), p1.getUniqueId());
